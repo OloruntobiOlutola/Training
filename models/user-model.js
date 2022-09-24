@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     validate: [validator.isEmail, "Please enter a valid email"],
     trim: true,
     lowerCase: true,
-    unique: true,
+    unique: [true, "Email has already been used"],
   },
   password: {
     type: String,
@@ -29,7 +29,6 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "user",
     enum: ["user", "blogger", "admin"],
-    select: false,
   },
 });
 

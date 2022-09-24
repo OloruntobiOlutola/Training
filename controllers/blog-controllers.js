@@ -55,7 +55,6 @@ exports.deleteBlog = async (req, res) => {
 };
 
 exports.createBlog = async (req, res) => {
-  console.log(req.user);
   try {
     req.body.author = req.user._id;
     const blog = await Blog.create(req.body);

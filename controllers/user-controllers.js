@@ -12,7 +12,7 @@ const generateToken = (id) => {
 //User signup handler
 exports.signUp = async (req, res) => {
   try {
-    const { email, fullName, phoneNumber, password } = req.body;
+    const { email, fullName, phoneNumber, password, role } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     const user = await User.create({
@@ -20,6 +20,7 @@ exports.signUp = async (req, res) => {
       fullName,
       phoneNumber,
       password: hash,
+      role,
     });
     const token = await generateToken(user._id);
     res.status(201).json({
@@ -183,4 +184,15 @@ exports.protect = async (req, res, next) => {
 
   req.user = user;
   next();
+};
+
+exports.restrictTo = (...roles) => {
+  return async (req, res, next) => {
+    if (!req.user.role.includes(...roles)) {
+      return res.status(401).json({
+        message: "You are not authorized to do this",
+      });
+    }
+    next();
+  };
 };
